@@ -8,6 +8,8 @@ import com.pnu.ailifelog.repository.DailySnapshotRepository;
 import com.pnu.ailifelog.repository.LocationRepository;
 import com.pnu.ailifelog.repository.SnapshotRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,29 +40,33 @@ public class SnapshotService {
      * 위치 태그를 기반으로 Location을 찾거나 생성하고, 해당 날짜의 DailySnapshot에 스냅샷을 추가합니다.
      *
      * @param content 스냅샷 내용
+     * @param timestamp 스냅샷 시간 (선택적, null이면 현재 시간 사용)
      * @param locationTag 위치 태그명
      * @param latitude GPS 위도 (선택적)
      * @param longitude GPS 경도 (선택적)
      * @param user 스냅샷을 생성하는 사용자
      * @return 생성된 스냅샷
      */
-    public Snapshot createSnapshot(String content, String locationTag, Double latitude, Double longitude, User user) {
+    public Snapshot createSnapshot(String content, LocalDateTime timestamp, String locationTag, Double latitude, Double longitude, User user) {
         try {
-            // 1. 위치 정보 처리 - 기존 태그 찾거나 새로 생성
+            // 1. 시간 설정 - null이면 현재 시간 사용
+            LocalDateTime snapshotTime = (timestamp != null) ? timestamp : LocalDateTime.now();
+            
+            // 2. 위치 정보 처리 - 기존 태그 찾거나 새로 생성
             Location location = findOrCreateLocation(locationTag, latitude, longitude, user);
             
-            // 2. 오늘 날짜의 DailySnapshot 찾거나 생성
-            LocalDate today = LocalDate.now();
-            DailySnapshot dailySnapshot = findOrCreateDailySnapshot(today, user);
+            // 3. 해당 날짜의 DailySnapshot 찾거나 생성 (스냅샷 시간 기준)
+            LocalDate snapshotDate = snapshotTime.toLocalDate();
+            DailySnapshot dailySnapshot = findOrCreateDailySnapshot(snapshotDate, user);
             
-            // 3. 새 스냅샷 생성
+            // 4. 새 스냅샷 생성
             Snapshot snapshot = new Snapshot();
             snapshot.setContent(content);
-            snapshot.setTimestamp(LocalDateTime.now());
+            snapshot.setTimestamp(snapshotTime);
             snapshot.setLocation(location);
             snapshot.setDailySnapshot(dailySnapshot);
             
-            // 4. 스냅샷 저장
+            // 5. 스냅샷 저장
             Snapshot savedSnapshot = snapshotRepository.save(snapshot);
             
             return savedSnapshot;
@@ -128,14 +134,15 @@ public class SnapshotService {
     }
 
     /**
-     * 특정 사용자의 모든 스냅샷을 최신순으로 조회합니다.
+     * 특정 사용자의 모든 스냅샷을 최신순으로 페이지네이션하여 조회합니다.
      *
      * @param user 조회할 사용자
-     * @return 사용자의 모든 스냅샷 리스트 (최신순)
+     * @param pageable 페이지네이션 정보
+     * @return 사용자의 스냅샷 페이지 (최신순)
      */
-    public List<Snapshot> getAllSnapshotsByUser(User user) {
+    public Page<Snapshot> getAllSnapshotsByUser(User user, Pageable pageable) {
         try {
-            return snapshotRepository.findByDailySnapshot_UserOrderByTimestampDesc(user);
+            return snapshotRepository.findByDailySnapshot_UserOrderByTimestampDesc(user, pageable);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, 
                 "스냅샷 조회 중 오류가 발생했습니다: " + e.getMessage());
@@ -165,20 +172,21 @@ public class SnapshotService {
     }
 
     /**
-     * 특정 위치의 사용자 스냅샷들을 최신순으로 조회합니다.
+     * 특정 위치의 사용자 스냅샷들을 최신순으로 페이지네이션하여 조회합니다.
      *
      * @param locationTag 위치 태그명
      * @param user 조회할 사용자
-     * @return 해당 위치의 스냅샷 리스트 (최신순)
+     * @param pageable 페이지네이션 정보
+     * @return 해당 위치의 스냅샷 페이지 (최신순)
      */
-    public List<Snapshot> getSnapshotsByLocationAndUser(String locationTag, User user) {
+    public Page<Snapshot> getSnapshotsByLocationAndUser(String locationTag, User user, Pageable pageable) {
         try {
             Optional<Location> location = locationRepository.findByTagNameAndUser(locationTag, user);
             
             if (location.isPresent()) {
-                return snapshotRepository.findByLocationOrderByTimestampDesc(location.get());
+                return snapshotRepository.findByLocationOrderByTimestampDesc(location.get(), pageable);
             } else {
-                return List.of(); // 빈 리스트 반환
+                return Page.empty(pageable); // 빈 페이지 반환
             }
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, 
@@ -187,17 +195,18 @@ public class SnapshotService {
     }
 
     /**
-     * 특정 기간의 사용자 스냅샷들을 조회합니다.
+     * 특정 기간의 사용자 스냅샷들을 페이지네이션하여 조회합니다.
      *
      * @param startDate 시작 날짜
      * @param endDate 종료 날짜
      * @param user 조회할 사용자
-     * @return 해당 기간의 스냅샷 리스트 (최신순)
+     * @param pageable 페이지네이션 정보
+     * @return 해당 기간의 스냅샷 페이지 (최신순)
      */
-    public List<Snapshot> getSnapshotsByDateRangeAndUser(LocalDate startDate, LocalDate endDate, User user) {
+    public Page<Snapshot> getSnapshotsByDateRangeAndUser(LocalDate startDate, LocalDate endDate, User user, Pageable pageable) {
         try {
             return snapshotRepository.findByDailySnapshot_UserAndDailySnapshot_DateBetweenOrderByTimestampDesc(
-                user, startDate, endDate);
+                user, startDate, endDate, pageable);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, 
                 "기간별 스냅샷 조회 중 오류가 발생했습니다: " + e.getMessage());
@@ -233,14 +242,15 @@ public class SnapshotService {
     }
 
     /**
-     * 특정 사용자의 DailySnapshot들을 최신순으로 조회합니다.
+     * 특정 사용자의 DailySnapshot들을 최신순으로 페이지네이션하여 조회합니다.
      *
      * @param user 조회할 사용자
-     * @return 사용자의 DailySnapshot 리스트 (최신순)
+     * @param pageable 페이지네이션 정보
+     * @return 사용자의 DailySnapshot 페이지 (최신순)
      */
-    public List<DailySnapshot> getDailySnapshotsByUser(User user) {
+    public Page<DailySnapshot> getDailySnapshotsByUser(User user, Pageable pageable) {
         try {
-            return dailySnapshotRepository.findByUserOrderByDateDesc(user);
+            return dailySnapshotRepository.findByUserOrderByDateDesc(user, pageable);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, 
                 "일별 스냅샷 조회 중 오류가 발생했습니다: " + e.getMessage());
