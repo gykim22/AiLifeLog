@@ -18,7 +18,6 @@ public class Snapshot extends BaseEntity {
     private UUID id;
 
     private String content;
-    private LocalDateTime timestamp;
 
     @ManyToOne
     @JoinColumn(name = "location_id")

@@ -1,9 +1,10 @@
 package com.pnu.ailifelog.service;
 
 import com.pnu.ailifelog.component.jwt.JwtProvider;
-import com.pnu.ailifelog.dto.auth.LoginDto;
-import com.pnu.ailifelog.dto.auth.TokenResponseDto;
-import com.pnu.ailifelog.dto.auth.UserDto;
+import com.pnu.ailifelog.dto.auth.ReqLoginDto;
+import com.pnu.ailifelog.dto.auth.ResSignupDto;
+import com.pnu.ailifelog.dto.auth.ResTokenDto;
+import com.pnu.ailifelog.dto.auth.ReqSignupDto;
 import com.pnu.ailifelog.entity.Role;
 import com.pnu.ailifelog.entity.RoleName;
 import com.pnu.ailifelog.entity.User;
@@ -32,21 +33,21 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     @Transactional(readOnly = true)
-    public TokenResponseDto login(LoginDto loginDto) {
-        log.info("로그인 시도: username = {}", loginDto.getUsername());
+    public ResTokenDto login(ReqLoginDto reqLoginDto) {
+        log.info("로그인 시도: username = {}", reqLoginDto.getUsername());
         
         // 사용자 조회
-        Optional<User> userOptional = userRepository.findByUsername(loginDto.getUsername());
+        Optional<User> userOptional = userRepository.findByUsername(reqLoginDto.getUsername());
         log.info("사용자 조회 결과: {}", userOptional.isPresent() ? "찾음" : "없음");
         
         User user = userOptional
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + loginDto.getUsername()));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + reqLoginDto.getUsername()));
 
         log.info("조회된 사용자: id={}, username={}, roles={}", 
                 user.getId(), user.getUsername(), user.getRoles().size());
 
         // 비밀번호 검증
-        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(reqLoginDto.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("잘못된 비밀번호입니다.");
         }
 
@@ -58,20 +59,17 @@ public class AuthService {
                 null,
                 user.getAuthorities()
         );
-
         // JWT 토큰 생성
         String token = jwtProvider.generateToken(authentication);
-        
         log.info("JWT 토큰 생성 완료");
-        
-        return new TokenResponseDto(token);
+        return new ResTokenDto(token);
     }
 
     @Transactional
-    public UserDto signup(UserDto userDto) {
+    public ResSignupDto signup(ReqSignupDto reqSignupDto) {
         // 중복 사용자명 검증
-        if (userRepository.existsByUsername(userDto.getUsername())) {
-            throw new IllegalArgumentException("이미 존재하는 사용자명입니다: " + userDto.getUsername());
+        if (userRepository.existsByUsername(reqSignupDto.getUsername())) {
+            throw new IllegalArgumentException("이미 존재하는 사용자명입니다: " + reqSignupDto.getUsername());
         }
 
         // 기본 역할 조회 (USER 역할)
@@ -80,18 +78,14 @@ public class AuthService {
 
         // 새 사용자 생성
         User user = new User(
-                userDto.getNickname(),
-                userDto.getUsername(),
-                passwordEncoder.encode(userDto.getPassword())
+                reqSignupDto.getNickname(),
+                reqSignupDto.getUsername(),
+                passwordEncoder.encode(reqSignupDto.getPassword())
         );
         user.setRoles(Set.of(userRole));
 
         // 사용자 저장
         User savedUser = userRepository.save(user);
-        
-        return UserDto.builder()
-                .username(savedUser.getUsername())
-                .nickname(savedUser.getName())
-                .build();
+        return new ResSignupDto(savedUser);
     }
 } 

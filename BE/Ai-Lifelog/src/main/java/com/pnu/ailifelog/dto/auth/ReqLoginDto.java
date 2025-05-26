@@ -11,9 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDto {
-    @NotBlank(message = "사용자 이름을 입력하세요.")
-    @Size(min=3, max = 15, message = "사용자 이름은 3자 이상 15자 이하로 입력하세요.")
+public class ReqLoginDto {
+    @NotBlank(message = "로그인 ID을 입력하세요.")
+    @Size(min=3, max = 15, message = "로그인 ID은 3자 이상 15자 이하로 입력하세요.")
     private String username;
 
     @NotBlank(message = "비밀번호를 입력하세요.")
