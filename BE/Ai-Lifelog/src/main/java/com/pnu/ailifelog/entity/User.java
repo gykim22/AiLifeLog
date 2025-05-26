@@ -36,7 +36,7 @@ public class User extends BaseEntity implements UserDetails {
     @NotBlank
     @NaturalId
     @Size(min=3, max = 15)
-    private String username;
+    private String loginId;
 
     @JsonIgnore
     @NotBlank
@@ -51,7 +51,7 @@ public class User extends BaseEntity implements UserDetails {
 
     public User(String name, String username, String password) {
         this.name = name;
-        this.username = username;
+        this.loginId = username;
         this.password = password;
     }
 

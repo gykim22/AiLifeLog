@@ -34,17 +34,17 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public ResTokenDto login(ReqLoginDto reqLoginDto) {
-        log.info("로그인 시도: username = {}", reqLoginDto.getUsername());
+        log.info("로그인 시도: username = {}", reqLoginDto.getLoginId());
         
         // 사용자 조회
-        Optional<User> userOptional = userRepository.findByUsername(reqLoginDto.getUsername());
+        Optional<User> userOptional = userRepository.findByUsername(reqLoginDto.getLoginId());
         log.info("사용자 조회 결과: {}", userOptional.isPresent() ? "찾음" : "없음");
         
         User user = userOptional
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + reqLoginDto.getUsername()));
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + reqLoginDto.getLoginId()));
 
         log.info("조회된 사용자: id={}, username={}, roles={}", 
-                user.getId(), user.getUsername(), user.getRoles().size());
+                user.getId(), user.getLoginId(), user.getRoles().size());
 
         // 비밀번호 검증
         if (!passwordEncoder.matches(reqLoginDto.getPassword(), user.getPassword())) {
@@ -55,7 +55,7 @@ public class AuthService {
 
         // Authentication 객체 생성
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                user.getUsername(),
+                user.getLoginId(),
                 null,
                 user.getAuthorities()
         );
@@ -68,8 +68,8 @@ public class AuthService {
     @Transactional
     public ResSignupDto signup(ReqSignupDto reqSignupDto) {
         // 중복 사용자명 검증
-        if (userRepository.existsByUsername(reqSignupDto.getUsername())) {
-            throw new IllegalArgumentException("이미 존재하는 사용자명입니다: " + reqSignupDto.getUsername());
+        if (userRepository.existsByUsername(reqSignupDto.getLoginId())) {
+            throw new IllegalArgumentException("이미 존재하는 사용자명입니다: " + reqSignupDto.getLoginId());
         }
 
         // 기본 역할 조회 (USER 역할)
@@ -79,7 +79,7 @@ public class AuthService {
         // 새 사용자 생성
         User user = new User(
                 reqSignupDto.getNickname(),
-                reqSignupDto.getUsername(),
+                reqSignupDto.getLoginId(),
                 passwordEncoder.encode(reqSignupDto.getPassword())
         );
         user.setRoles(Set.of(userRole));

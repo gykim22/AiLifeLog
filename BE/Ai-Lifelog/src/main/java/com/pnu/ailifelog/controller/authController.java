@@ -26,7 +26,7 @@ public class AuthController {
     public ResponseEntity<ResTokenDto> login(@Valid @RequestBody ReqLoginDto reqLoginDto) {
         try {
             ResTokenDto tokenResponse = authService.login(reqLoginDto);
-            log.info("사용자 로그인 성공: {}", reqLoginDto.getUsername());
+            log.info("사용자 로그인 성공: {}", reqLoginDto.getLoginId());
             return ResponseEntity.ok(tokenResponse);
         } catch (UsernameNotFoundException | BadCredentialsException e) {
             log.warn("로그인 실패: {}", e.getMessage());
@@ -40,7 +40,7 @@ public class AuthController {
     public ResponseEntity<ResSignupDto> signup(@Valid @RequestBody ReqSignupDto reqSignupDto) {
         try {
             ResSignupDto createdUser = authService.signup(reqSignupDto);
-            log.info("새 사용자 등록 성공: {}", reqSignupDto.getUsername());
+            log.info("새 사용자 등록 성공: {}", reqSignupDto.getLoginId());
             return ResponseEntity.ok(createdUser);
 
         } catch (IllegalArgumentException e) {
