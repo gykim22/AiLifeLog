@@ -49,9 +49,9 @@ public class User extends BaseEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public User(String name, String username, String password) {
+    public User(String name, String loginId, String password) {
         this.name = name;
-        this.loginId = username;
+        this.loginId = loginId;
         this.password = password;
     }
 
@@ -60,5 +60,10 @@ public class User extends BaseEntity implements UserDetails {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .toList();
+    }
+
+    @Override
+    public String getUsername() {
+        return loginId;
     }
 }

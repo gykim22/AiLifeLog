@@ -37,13 +37,13 @@ public class AuthService {
         log.info("로그인 시도: username = {}", reqLoginDto.getLoginId());
         
         // 사용자 조회
-        Optional<User> userOptional = userRepository.findByUsername(reqLoginDto.getLoginId());
+        Optional<User> userOptional = userRepository.findByLoginId(reqLoginDto.getLoginId());
         log.info("사용자 조회 결과: {}", userOptional.isPresent() ? "찾음" : "없음");
         
         User user = userOptional
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + reqLoginDto.getLoginId()));
 
-        log.info("조회된 사용자: id={}, username={}, roles={}", 
+        log.info("조회된 사용자: id={}, loginid={}, roles={}",
                 user.getId(), user.getLoginId(), user.getRoles().size());
 
         // 비밀번호 검증
@@ -68,7 +68,7 @@ public class AuthService {
     @Transactional
     public ResSignupDto signup(ReqSignupDto reqSignupDto) {
         // 중복 사용자명 검증
-        if (userRepository.existsByUsername(reqSignupDto.getLoginId())) {
+        if (userRepository.existsByLoginId(reqSignupDto.getLoginId())) {
             throw new IllegalArgumentException("이미 존재하는 사용자명입니다: " + reqSignupDto.getLoginId());
         }
 

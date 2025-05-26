@@ -48,7 +48,7 @@ public class UserService {
         return userPage.map(ResUserDto::fromEntity).getContent();
     }
     public ResUserDto getUserByLoginId(String loginId) {
-        User user = userRepository.findUsersByLoginId(loginId).stream().findFirst().orElseThrow(
+        User user = userRepository.findByLoginId(loginId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다: " + loginId)
         );
         return ResUserDto.fromEntity(user);
