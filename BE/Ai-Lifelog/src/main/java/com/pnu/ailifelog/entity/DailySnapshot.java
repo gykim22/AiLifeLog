@@ -1,6 +1,7 @@
 package com.pnu.ailifelog.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
@@ -19,12 +20,15 @@ public class DailySnapshot {
     private UUID id;
 
     @Column(nullable = false)
+    @NotNull
     private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @NotNull
     private User user;
 
     @OneToMany(mappedBy = "dailySnapshot")
+    @OrderBy("timestamp ASC")
     private List<Snapshot> lifeSnapshots;
 }

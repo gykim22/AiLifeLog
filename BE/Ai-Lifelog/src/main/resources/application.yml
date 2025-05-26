@@ -26,7 +26,7 @@ spring:
 
 
 jwt:
-    secret: ${JWT_SECRET:secretary}
+    secret: ${JWT_ㅈSECRET:secretary}
     expiration: 7200 # in seconds = 2 hours
 
 # Logging configuration for UTF-8 support

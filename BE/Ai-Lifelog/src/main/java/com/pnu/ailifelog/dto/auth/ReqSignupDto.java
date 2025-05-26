@@ -2,9 +2,8 @@ package com.pnu.ailifelog.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
-
-import javax.validation.constraints.Size;
 
 @Getter
 @Setter
