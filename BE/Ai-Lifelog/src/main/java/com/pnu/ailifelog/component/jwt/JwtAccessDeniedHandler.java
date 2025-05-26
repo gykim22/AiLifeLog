@@ -1,4 +1,4 @@
-package com.pnu.ailifelog.jwt;
+package com.pnu.ailifelog.component.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

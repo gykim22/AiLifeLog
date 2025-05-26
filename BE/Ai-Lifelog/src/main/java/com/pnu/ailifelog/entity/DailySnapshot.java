@@ -24,5 +24,5 @@ public class DailySnapshot {
     private User user;
 
     @OneToMany(mappedBy = "dailySnapshot")
-    private List<LifeSnapshot> lifeSnapshots;
+    private List<Snapshot> lifeSnapshots;
 }

@@ -1,4 +1,4 @@
-package com.pnu.ailifelog.jwt;
+package com.pnu.ailifelog.component.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
