@@ -3,8 +3,10 @@ package com.pnu.ailifelog.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -12,8 +14,8 @@ import java.time.LocalDateTime;
 @Table(name = "snapshots")
 public class Snapshot extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @UuidGenerator
+    private UUID id;
 
     private String content;
     private LocalDateTime timestamp;

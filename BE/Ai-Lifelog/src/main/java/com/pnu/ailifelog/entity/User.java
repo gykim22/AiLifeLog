@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 
 @Entity
@@ -23,10 +25,9 @@ import java.util.Set;
 @Table(name = "users")
 @NoArgsConstructor
 public class User extends BaseEntity implements UserDetails {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @UuidGenerator
+    private UUID id;
 
     @NotBlank
     @Size(min=3, max = 40)

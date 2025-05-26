@@ -1,8 +1,10 @@
 spring:
   application:
     name: Ai-Lifelog
-  profiles:
-    include: db,ai
+
+  config:
+    import: optional:file:.env[.properties]
+
   jpa:
     hibernate:
       ddl-auto: create
@@ -12,3 +14,27 @@ spring:
       format_sql: true
       dialect: org.hibernate.dialect.PostgreSQLDialect
 
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/db_bootcamp}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:secretaryship}
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:sk-...}
+
+
+jwt:
+    secret: ${JWT_SECRET:secretary}
+    expiration: 3600 # in seconds
+
+# Logging configuration for UTF-8 support
+logging:
+  level:
+    root: DEBUG
+  charset:
+    console: UTF-8
+    file: UTF-8
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %5level %pid --- [%15.15t] %-40.40logger{39} : %msg%n"
