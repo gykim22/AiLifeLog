@@ -23,7 +23,7 @@ public class Snapshot extends BaseEntity {
 
     @NotBlank
     private String content;
-    
+
     @NotNull
     private LocalDateTime timestamp;
 
