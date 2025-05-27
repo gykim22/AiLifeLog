@@ -30,5 +30,5 @@ public class DailySnapshot {
 
     @OneToMany(mappedBy = "dailySnapshot")
     @OrderBy("timestamp ASC")
-    private List<Snapshot> lifeSnapshots;
+    private List<Snapshot> snapshots;
 }
