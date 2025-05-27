@@ -26,7 +26,7 @@ spring:
 
 
 jwt:
-    secret: ${JWT_ㅈSECRET:secretary}
+    secret: ${JWT_SECRET:mySecretKeyForJWTTokenGenerationThatIsLongEnoughForHMACSHA256Algorithm}
     expiration: 7200 # in seconds = 2 hours
 
 # Logging configuration for UTF-8 support

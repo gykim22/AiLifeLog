@@ -49,7 +49,10 @@ dependencies {
 
     // for testing
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly 'com.h2database:h2'
 
     // Spring Security
     implementation "org.springframework.boot:spring-boot-starter-security"
