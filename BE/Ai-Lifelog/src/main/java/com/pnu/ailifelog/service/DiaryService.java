@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -118,7 +117,6 @@ public class DiaryService {
                 "일기 조회 중 오류가 발생했습니다.");
         }
     }
-
     /**
      * 특정 날짜의 일기를 조회합니다.
      *

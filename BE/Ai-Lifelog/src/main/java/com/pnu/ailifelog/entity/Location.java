@@ -37,4 +37,14 @@ public class Location {
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
+
+    public String toJSONString() {
+        if (latitude != null && longitude != null) {
+            return String.format("{\"id\": %d, \"tagName\": \"%s\", \"latitude\": %.6f, \"longitude\": %.6f}",
+                    id, tagName, latitude, longitude);
+        } else {
+            return String.format("{\"id\": %d, \"tagName\": \"%s\"}",
+                    id, tagName);
+        }
+    }
 }
