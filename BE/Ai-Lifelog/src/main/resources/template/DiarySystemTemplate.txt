@@ -23,6 +23,7 @@ DailySnapshot 데이터 구조로 변환해주는 AI야.
       "timestamp": "09:00",
       "content": "동네 공원에서 산책을 했다",
       "location": {
+        "id": 12, // 없으면 생략 가능
         "tagName": "동네 공원"
       }
     },

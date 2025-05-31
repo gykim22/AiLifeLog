@@ -1,8 +1,10 @@
 package com.pnu.ailifelog.service;
 
 import com.pnu.ailifelog.entity.DailySnapshot;
+import com.pnu.ailifelog.entity.Diary;
 import com.pnu.ailifelog.entity.User;
 import com.pnu.ailifelog.repository.DailySnapshotRepository;
+import com.pnu.ailifelog.repository.DiaryRepository;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.openai.OpenAiChatModel;
@@ -22,11 +24,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Service
 public class LLMConvertService {
     private final DailySnapshotRepository dailySnapshotRepository;
+    private final DiaryRepository diaryRepository;
     private final ChatClient chatClient;
+
     private final String dailySnapshotSystemTemplate;
     private final String dailySnapshotUserTemplate;
 
-    public static String asString(Resource resource) {
+    private static String asString(Resource resource) {
         try (Reader reader = new InputStreamReader(resource.getInputStream(), UTF_8)) {
             return FileCopyUtils.copyToString(reader);
         } catch (IOException e) {
@@ -34,7 +38,7 @@ public class LLMConvertService {
         }
     }
 
-    private String formatDailySnapshotForLLM(DailySnapshot dailySnapshot) {
+    private String templateDailySnapshot(DailySnapshot dailySnapshot) {
         StringBuilder sb = new StringBuilder();
         sb.append("날짜: ").append(dailySnapshot.getDate()).append("\n");
         sb.append("일정 목록:\n");
@@ -53,15 +57,19 @@ public class LLMConvertService {
     }
 
     public LLMConvertService(OpenAiChatModel openAiChatModel,
-                             DailySnapshotRepository dailySnapshotRepository,
-                            @Value("classpath:template/DailySnapshotSystemTemplate.txt") Resource dailySnapshotSystemTemplateFile,
-                            @Value("classpath:template/DailySnapshotUserTemplate.txt") Resource dailySnapshotUserTemplateFile
+         DailySnapshotRepository dailySnapshotRepository,
+        DiaryRepository diaryRepository,
+        @Value("classpath:template/DailySnapshotSystemTemplate.txt") Resource dailySnapshotSystemTemplateFile,
+        @Value("classpath:template/DailySnapshotUserTemplate.txt") Resource dailySnapshotUserTemplateFile
     ) {
         this.dailySnapshotRepository = dailySnapshotRepository;
+        this.diaryRepository = diaryRepository;
         this.chatClient = ChatClient.create(openAiChatModel);
         this.dailySnapshotSystemTemplate = asString(dailySnapshotSystemTemplateFile);
         this.dailySnapshotUserTemplate = asString(dailySnapshotUserTemplateFile);
     }
+
+
     public ChatResponse summarize(UUID dailySnapshotId, User owner) {
         DailySnapshot dailySnapshot = dailySnapshotRepository.findById(dailySnapshotId).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "일간 스냅샷을 찾을 수 없습니다.")
@@ -69,10 +77,27 @@ public class LLMConvertService {
         if (!dailySnapshot.getUser().getId().equals(owner.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "해당 일간 스냅샷에 대한 권한이 없습니다.");
         }
-        String formattedSnapshot = formatDailySnapshotForLLM(dailySnapshot);
+        String formattedSnapshot = templateDailySnapshot(dailySnapshot);
         return chatClient.prompt().system(dailySnapshotSystemTemplate)
                 .user(
                 input -> input.text(dailySnapshotUserTemplate).params(Map.of("format", formattedSnapshot))
         ).call().chatResponse();
     }
+
+    public ChatResponse toDailySnapShot(UUID diaryId, User owner) {
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "일기를 찾을 수 없습니다.")
+        );
+
+        if (!diary.getUser().getId().equals(owner.getId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "해당 일기에 대한 권한이 없습니다.");
+        }
+
+        return chatClient.prompt().system(dailySnapshotSystemTemplate)
+                .user(input -> input.text(diary.getContent())
+                        .params(Map.of("format", diary.getDate().toString())))
+                .call().chatResponse();
+    }
+
+
 }
