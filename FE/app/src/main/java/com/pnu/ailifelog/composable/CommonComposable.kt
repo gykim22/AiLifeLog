@@ -1,4 +1,4 @@
-package com.pnu.termproject.composable
+package com.pnu.ailifelog.composable
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height

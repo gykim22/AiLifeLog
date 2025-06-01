@@ -1,6 +1,5 @@
-package com.pnu.termproject
+package com.pnu.ailifelog
 
-import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,9 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.pnu.termproject.R
-import com.pnu.termproject.composable.buttonModifier
-import com.pnu.termproject.ui.theme.pretendard
+import com.pnu.ailifelog.composable.buttonModifier
+import com.pnu.ailifelog.ui.theme.pretendard
 
 /**
  * 주로 화면 아랫 부분에 있는 버튼입니다. 앱 전반에서 주로 사용합니다.
