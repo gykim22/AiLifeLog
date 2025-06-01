@@ -1,4 +1,4 @@
-package com.pnu.termproject.ui.theme
+package com.pnu.ailifelog.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

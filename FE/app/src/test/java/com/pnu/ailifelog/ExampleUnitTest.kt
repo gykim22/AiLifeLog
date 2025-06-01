@@ -1,4 +1,4 @@
-package com.pnu.termproject
+package com.pnu.ailifelog
 
 import org.junit.Test
 
