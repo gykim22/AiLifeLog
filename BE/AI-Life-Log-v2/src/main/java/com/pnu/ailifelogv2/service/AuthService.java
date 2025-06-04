@@ -1,6 +1,7 @@
 package com.pnu.ailifelogv2.service;
 
 import com.pnu.ailifelogv2.component.jwt.TokenProvider;
+import com.pnu.ailifelogv2.dto.User.ResUserDto;
 import com.pnu.ailifelogv2.entity.User;
 import com.pnu.ailifelogv2.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -68,4 +69,45 @@ public class AuthService {
         );
         return tokenProvider.generateToken(authentication);
     }
+
+    /**
+     * 현재 인증된 사용자 정보 조회
+     *
+     * @param authentication 인증 정보
+     * @return 현재 사용자 정보 DTO
+     */
+    public ResUserDto getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다.");
+        }
+        String currentUsername = authentication.getName();
+        User user = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + currentUsername));
+        return new ResUserDto(user.getId(), user.getUsername());
+    }
+
+    /**
+     * 현재 인증된 사용자 삭제
+     *
+     * @param password 사용자의 비밀번호
+     * @param authentication 인증 정보
+     */
+    public void deleteCurrentUser(String password, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다.");
+        }
+        String currentUsername = authentication.getName();
+        User user = userRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + currentUsername));
+
+        // 비밀번호 검증
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadCredentialsException("잘못된 비밀번호입니다.");
+        }
+
+        // 사용자 삭제
+        userRepository.delete(user);
+        log.info("사용자 삭제 성공: username = {}", currentUsername);
+    }
+
 }
