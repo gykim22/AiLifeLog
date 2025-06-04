@@ -1,11 +1,7 @@
 package com.pnu.ailifelog.service;
 
 import com.pnu.ailifelog.entity.*;
-import com.pnu.ailifelog.repository.DailySnapshotRepository;
-import com.pnu.ailifelog.repository.LocationRepository;
-import com.pnu.ailifelog.repository.RoleRepository;
-import com.pnu.ailifelog.repository.SnapshotRepository;
-import com.pnu.ailifelog.repository.UserRepository;
+import com.pnu.ailifelog.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,9 +13,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.FileCopyUtils;
 
-import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,12 +21,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.logging.Logger;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -41,22 +32,18 @@ class LLMConvertServiceTest {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private DailySnapshotRepository dailySnapshotRepository;
-
     @Autowired
     private SnapshotRepository snapshotRepository;
-
+    @Autowired
+    private DiaryRepository diaryRepository;
     @Autowired
     private LocationRepository locationRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private LLMConvertService llmConvertService;
 
@@ -66,16 +53,18 @@ class LLMConvertServiceTest {
     private Resource dailySnapshotUserTemplateFile;
 
     private User testUser;
-    private DailySnapshot testDailySnapshot;
     private List<Snapshot> testSnapshots;
+    private DailySnapshot testDailySnapshot;
+    private Diary testDiary;
 
     @BeforeEach
     void setUp() {
         // 테스트 데이터 설정
-        setupTestData();
+        User testUser = setupTestUser();
+        setupDailySnapshot();
     }
 
-    private void setupTestData() {
+    private User setupTestUser() {
         // 1. Role 생성
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseGet(() -> {
@@ -94,8 +83,11 @@ class LLMConvertServiceTest {
                 .password(passwordEncoder.encode("password123"))
                 .roles(roles)
                 .build();
-        testUser = userRepository.save(testUser);
+        return userRepository.save(testUser);
+    }
 
+    private void setupDailySnapshot() {
+        // 1. Role 생성
         // 3. DailySnapshot 생성
         testDailySnapshot = new DailySnapshot();
         testDailySnapshot.setDate(LocalDate.now());
@@ -175,19 +167,38 @@ class LLMConvertServiceTest {
         dailySnapshotRepository.save(testDailySnapshot);
     }
 
+    private void setupDiary(){
+        testDiary = new Diary();
+        testDiary.setTitle("테스트 일기 제목");
+        testDiary.setContent("오늘은 아침에 산책을 하고, 점심에는 친구를 만났으며, 저녁에는 집에서 책을 읽었다.");
+        testDiary.setDate(LocalDate.now());
+        testDiary.setUser(testUser);
+        testDiary = diaryRepository.save(testDiary);
+    }
 
     @Test
     @DisplayName("정상적인 DailySnapshot 요약 테스트 - 데이터 검증")
-    void testSummarizeDataValidation() {
+    void testToDiaryDataValidation() {
         // Given
         UUID dailySnapshotId = testDailySnapshot.getId();
         User owner = testUser;
-        ChatResponse res = llmConvertService.summarize(dailySnapshotId, owner);
+        ChatResponse res = llmConvertService.toDiary(dailySnapshotId, owner);
         // 제대로 반환되었는지 검증
         assertNotNull(res);
         System.out.println(res.getResult());
     }
 
 
-
-} 
+    @Test
+    @DisplayName("정상적인 Diary 요약 테스트 - 데이터 검증")
+    void testToDailySnapshotDataValidation() {
+        // Given
+        setupDiary();
+        UUID diaryId = testDiary.getId();
+        User owner = testUser;
+        ChatResponse res = llmConvertService.toDailySnapShot(diaryId, owner);
+        // 제대로 반환되었는지 검증
+        assertNotNull(res);
+        System.out.println(res.getResult());
+    }
+}

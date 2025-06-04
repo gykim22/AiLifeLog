@@ -11,10 +11,11 @@ public class UserLocationTools {
     private LocationRepository locationRepository;
     private User owner;
 
-    UserLocationTools(LocationRepository locationRepository, User owner) {
+    public UserLocationTools(LocationRepository locationRepository, User owner) {
         this.locationRepository = locationRepository;
         this.owner = owner;
     }
+
     @Tool(
             name = "getAllUserLocations",
             description = """
