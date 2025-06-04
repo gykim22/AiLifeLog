@@ -1,5 +1,6 @@
 package com.pnu.ailifelog.service;
 
+import com.pnu.ailifelog.component.EntityTemplater;
 import com.pnu.ailifelog.component.tool.UserLocationTools;
 import com.pnu.ailifelog.entity.DailySnapshot;
 import com.pnu.ailifelog.entity.Diary;
@@ -8,6 +9,7 @@ import com.pnu.ailifelog.repository.DailySnapshotRepository;
 import com.pnu.ailifelog.repository.DiaryRepository;
 import com.pnu.ailifelog.repository.LocationRepository;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.metadata.Usage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +20,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.Map;
 import java.util.UUID;
 
@@ -29,6 +32,9 @@ public class LLMConvertService {
     private final LocationRepository locationRepository;
     private final DiaryRepository diaryRepository;
     private final ChatClient chatClient;
+    private final TrackTokenUsageService trackTokenUsageService;
+
+    private final EntityTemplater entityTemplater;
 
     private final String dailySnapshotSystemTemplate;
     private final String dailySnapshotUserTemplate;
@@ -44,28 +50,14 @@ public class LLMConvertService {
         }
     }
 
-    private String templateDailySnapshot(DailySnapshot dailySnapshot) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("날짜: ").append(dailySnapshot.getDate()).append("\n");
-        sb.append("일정 목록:\n");
-        dailySnapshot.getSnapshots().forEach(snapshot -> {
-            sb.append("- [").append(snapshot.getTimestamp().toLocalTime()).append("]: ").append(snapshot.getContent());
-            if (snapshot.getLocation() != null) {
-                sb.append(" (위치: ").append(snapshot.getLocation().getTagName());
-                if (snapshot.getLocation().getLatitude() != null && snapshot.getLocation().getLongitude() != null) {
-                    sb.append(", 위도: ").append(snapshot.getLocation().getLatitude())
-                            .append(", 경도: ").append(snapshot.getLocation().getLongitude());
-                }
-            }
-            sb.append("\n");
-        });
-        return sb.toString();
-    }
+
 
     public LLMConvertService(OpenAiChatModel openAiChatModel,
          DailySnapshotRepository dailySnapshotRepository,
         LocationRepository locationRepository,
         DiaryRepository diaryRepository,
+        EntityTemplater entityTemplater,
+        TrackTokenUsageService trackTokenUsageService,
         @Value("classpath:template/DailySnapshotSystemTemplate.txt") Resource dailySnapshotSystemTemplateFile,
         @Value("classpath:template/DailySnapshotUserTemplate.txt") Resource dailySnapshotUserTemplateFile,
         @Value("classpath:template/DiarySystemTemplate.txt") Resource diarySystemTemplateFile,
@@ -77,6 +69,9 @@ public class LLMConvertService {
         this.dailySnapshotRepository = dailySnapshotRepository;
         this.diaryRepository = diaryRepository;
         this.locationRepository = locationRepository;
+
+        this.entityTemplater = entityTemplater;
+        this.trackTokenUsageService = trackTokenUsageService;
 
         this.dailySnapshotSystemTemplate = asString(dailySnapshotSystemTemplateFile);
         this.dailySnapshotUserTemplate = asString(dailySnapshotUserTemplateFile);
@@ -92,11 +87,13 @@ public class LLMConvertService {
         if (!dailySnapshot.getUser().getId().equals(owner.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "해당 일간 스냅샷에 대한 권한이 없습니다.");
         }
-        String formattedSnapshot = templateDailySnapshot(dailySnapshot);
-        return chatClient.prompt().system(dailySnapshotSystemTemplate)
+        String formattedSnapshot = entityTemplater.templateDailySnapshot(dailySnapshot);
+        ChatResponse res=  chatClient.prompt().system(dailySnapshotSystemTemplate)
                 .user(
                 input -> input.text(dailySnapshotUserTemplate).params(Map.of("format", formattedSnapshot))
         ).call().chatResponse();
+        trackTokenUsageService.saveUserTokenUsage(owner, LocalDate.now(), res.getMetadata().getUsage());
+        return res;
     }
 
     public ChatResponse toDailySnapShot(UUID diaryId, User owner) {
@@ -108,7 +105,7 @@ public class LLMConvertService {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "해당 일기에 대한 권한이 없습니다.");
         }
 
-        return chatClient.prompt().system(diarySystemTemplate)
+        ChatResponse res = chatClient.prompt().system(diarySystemTemplate)
                 .user(input -> input.text(diaryUserTemplate)
                     .params(Map.of(
                             "title", dailySnapshotUserTemplate,
@@ -117,5 +114,7 @@ public class LLMConvertService {
                     )))
                 .tools(new UserLocationTools(locationRepository, owner))
                 .call().chatResponse();
+        trackTokenUsageService.saveUserTokenUsage(owner, LocalDate.now(), res.getMetadata().getUsage());
+        return res;
     }
 }
