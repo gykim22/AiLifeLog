@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter @Builder
+@Getter @Setter
 @NoArgsConstructor
 public class User extends BaseEntity implements UserDetails {
 
