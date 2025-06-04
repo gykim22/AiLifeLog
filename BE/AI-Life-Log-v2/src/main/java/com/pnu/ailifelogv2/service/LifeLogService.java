@@ -42,16 +42,10 @@ public class LifeLogService {
         return lifeLogRepository.findByUser(user,pageable).map(ResLifeLogDto::new);
     }
 
-    public Page<ResLifeLogDto> getLifeLogsByUserAndDateRange(User user, String from, String to, Integer page, Integer size) {
-        LocalDate fromDate, toDate;
+    public Page<ResLifeLogDto> getLifeLogsByUserAndDateRange(User user, LocalDate from, LocalDate to, Integer page, Integer size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "timestamp"));
-        try {
-            fromDate = LocalDate.parse(from);
-            toDate = LocalDate.parse(to);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "날짜 형식이 잘못되었습니다. 'YYYY-MM-DD' 형식으로 입력해주세요.");
-        }
-        return lifeLogRepository.findByTimestampBetweenAndUser(fromDate.atStartOfDay(), toDate.atTime(23, 59, 59), user, pageable)
+
+        return lifeLogRepository.findByTimestampBetweenAndUser(from.atStartOfDay(), from.atTime(23, 59, 59), user, pageable)
                 .map(ResLifeLogDto::new);
     }
 
