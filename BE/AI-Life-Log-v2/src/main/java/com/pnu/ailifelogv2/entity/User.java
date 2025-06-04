@@ -14,7 +14,6 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Getter @Setter @Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class User extends BaseEntity implements UserDetails {
 
@@ -30,6 +29,11 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     @JsonIgnore
     private String password;
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

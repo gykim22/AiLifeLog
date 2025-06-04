@@ -57,8 +57,8 @@ public class WebSecurityConfig {
                 // 요청에 대한 권한 설정
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll() // 로그인 허용
-                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/signup").permitAll() // 회원가입 허용
+                                .requestMatchers(HttpMethod.POST, "/api/v2/auth/login").permitAll() // 로그인 허용
+                                .requestMatchers(HttpMethod.POST, "/api/v2/auth/signup").permitAll() // 회원가입 허용
                                 .anyRequest().authenticated() // 나머지 요청은 인증 필요
                 )
                 .build();
