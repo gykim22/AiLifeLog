@@ -1,0 +1,15 @@
+meta {
+  name: get self
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseurl}}/api/v2/users/self
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
