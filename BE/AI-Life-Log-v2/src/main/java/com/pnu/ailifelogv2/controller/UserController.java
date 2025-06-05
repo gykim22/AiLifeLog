@@ -1,5 +1,6 @@
 package com.pnu.ailifelogv2.controller;
 
+import com.pnu.ailifelogv2.dto.User.ReqDeleteDto;
 import com.pnu.ailifelogv2.dto.User.ResUserDto;
 import com.pnu.ailifelogv2.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class UserController {
     }
 
     @DeleteMapping("/self")
-    public ResponseEntity<Void> deleteCurrentUser(String password, Authentication authentication) {
-        authService.deleteCurrentUser(password,    authentication);
+    public ResponseEntity<Void> deleteCurrentUser(@RequestBody ReqDeleteDto dto, Authentication authentication) {
+        authService.deleteCurrentUser(dto.getPassword(), authentication);
         return ResponseEntity.ok().build();
     }
 }
