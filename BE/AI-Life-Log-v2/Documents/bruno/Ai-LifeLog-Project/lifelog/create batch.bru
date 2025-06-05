@@ -1,0 +1,180 @@
+meta {
+  name: create batch lifelogs
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseurl}}/api/v2/logs/batch
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
+
+body:json {
+  [
+    {
+      "title": "아침 조깅",
+      "description": "오늘 아침에 5km 조깅을 했다. 날씨가 좋았다.",
+      "timestamp": "2024-06-01T07:30:00"
+    },
+    {
+      "title": "점심 식사",
+      "description": "친구와 함께 한식당에서 점심을 먹었다.",
+      "timestamp": "2024-06-01T12:30:00"
+    },
+    {
+      "title": "저녁 독서",
+      "description": "새로 산 소설을 읽었다. 재미있었다.",
+      "timestamp": "2024-06-01T20:00:00"
+    },
+    {
+      "title": "아침 요가",
+      "description": "30분 요가를 했다. 몸이 한결 가벼워졌다.",
+      "timestamp": "2024-06-02T08:00:00"
+    },
+    {
+      "title": "오전 회의",
+      "description": "팀 회의에서 새로운 프로젝트 계획을 논의했다.",
+      "timestamp": "2024-06-02T10:00:00"
+    },
+    {
+      "title": "점심 산책",
+      "description": "회사 근처 공원에서 산책을 했다.",
+      "timestamp": "2024-06-02T13:00:00"
+    },
+    {
+      "title": "저녁 운동",
+      "description": "헬스장에서 1시간 운동을 했다.",
+      "timestamp": "2024-06-02T19:00:00"
+    },
+    {
+      "title": "아침 명상",
+      "description": "20분 명상을 했다. 마음이 안정되었다.",
+      "timestamp": "2024-06-03T07:00:00"
+    },
+    {
+      "title": "오전 코딩",
+      "description": "새로운 기능 개발을 시작했다.",
+      "timestamp": "2024-06-03T09:00:00"
+    },
+    {
+      "title": "점심 식사",
+      "description": "동료들과 함께 점심을 먹었다.",
+      "timestamp": "2024-06-03T12:30:00"
+    },
+    {
+      "title": "오후 회의",
+      "description": "클라이언트와 미팅을 했다.",
+      "timestamp": "2024-06-03T15:00:00"
+    },
+    {
+      "title": "저녁 영화",
+      "description": "친구와 영화를 봤다.",
+      "timestamp": "2024-06-03T20:00:00"
+    },
+    {
+      "title": "아침 수영",
+      "description": "수영장에서 1km 수영을 했다.",
+      "timestamp": "2024-06-04T07:00:00"
+    },
+    {
+      "title": "오전 독서",
+      "description": "새로운 기술 서적을 읽었다.",
+      "timestamp": "2024-06-04T10:00:00"
+    },
+    {
+      "title": "점심 식사",
+      "description": "샐러드와 샌드위치를 먹었다.",
+      "timestamp": "2024-06-04T13:00:00"
+    },
+    {
+      "title": "오후 코딩",
+      "description": "버그 수정 작업을 했다.",
+      "timestamp": "2024-06-04T15:00:00"
+    },
+    {
+      "title": "저녁 요리",
+      "description": "새로운 레시피로 저녁을 만들었다.",
+      "timestamp": "2024-06-04T19:00:00"
+    },
+    {
+      "title": "아침 달리기",
+      "description": "10km 달리기를 했다.",
+      "timestamp": "2024-06-05T06:30:00"
+    },
+    {
+      "title": "오전 회의",
+      "description": "스프린트 계획 회의를 했다.",
+      "timestamp": "2024-06-05T10:00:00"
+    },
+    {
+      "title": "점심 식사",
+      "description": "팀원들과 함께 점심을 먹었다.",
+      "timestamp": "2024-06-05T12:30:00"
+    },
+    {
+      "title": "오후 개발",
+      "description": "새로운 기능 구현을 완료했다.",
+      "timestamp": "2024-06-05T15:00:00"
+    },
+    {
+      "title": "저녁 독서",
+      "description": "소설을 읽었다.",
+      "timestamp": "2024-06-05T20:00:00"
+    },
+    {
+      "title": "아침 요가",
+      "description": "1시간 요가를 했다.",
+      "timestamp": "2024-06-06T07:00:00"
+    },
+    {
+      "title": "오전 코딩",
+      "description": "코드 리팩토링을 했다.",
+      "timestamp": "2024-06-06T09:00:00"
+    },
+    {
+      "title": "점심 산책",
+      "description": "공원에서 산책을 했다.",
+      "timestamp": "2024-06-06T13:00:00"
+    },
+    {
+      "title": "오후 회의",
+      "description": "프로젝트 진행 상황 회의를 했다.",
+      "timestamp": "2024-06-06T15:00:00"
+    },
+    {
+      "title": "저녁 운동",
+      "description": "헬스장에서 운동을 했다.",
+      "timestamp": "2024-06-06T19:00:00"
+    },
+    {
+      "title": "아침 명상",
+      "description": "30분 명상을 했다.",
+      "timestamp": "2024-06-07T07:00:00"
+    },
+    {
+      "title": "오전 개발",
+      "description": "테스트 코드를 작성했다.",
+      "timestamp": "2024-06-07T09:00:00"
+    },
+    {
+      "title": "점심 식사",
+      "description": "새로운 식당에서 점심을 먹었다.",
+      "timestamp": "2024-06-07T12:30:00"
+    },
+    {
+      "title": "오후 회의",
+      "description": "클라이언트 미팅을 했다.",
+      "timestamp": "2024-06-07T15:00:00"
+    },
+    {
+      "title": "저녁 영화",
+      "description": "가족과 영화를 봤다.",
+      "timestamp": "2024-06-07T20:00:00"
+    }
+  ]
+}

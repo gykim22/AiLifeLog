@@ -1,0 +1,15 @@
+meta {
+  name: get all lifelogs with date range
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseurl}}/api/v2/logs?from=2024-06-01&to=2024-06-07
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
