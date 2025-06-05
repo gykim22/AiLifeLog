@@ -1,0 +1,22 @@
+meta {
+  name: update lifelog
+  type: http
+  seq: 4
+  description: 특정 ID의 라이프로그를 수정합니다.
+}
+
+put {
+  url: {{baseurl}}/api/v2/logs/1
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
+
+body:json {
+  {
+    "description": "수정된 설명"
+  }
+} 

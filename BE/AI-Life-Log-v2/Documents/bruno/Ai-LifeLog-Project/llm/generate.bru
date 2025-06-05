@@ -1,0 +1,22 @@
+meta {
+  name: generate lifelog
+  type: http
+  seq: 2
+  description: 자유 형식의 일기/텍스트를 구조화된 LifeLog로 변환합니다.
+}
+
+post {
+  url: {{baseurl}}/api/v2/llms/generate
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
+
+body:json {
+  {
+    "userInput": "2024년 6월 1일 아침에 조깅을 하고, 오후엔 친구와 카페에서 대화를 나눴다. 저녁엔 새로운 소설을 읽었다."
+  }
+} 
