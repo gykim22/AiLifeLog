@@ -1,5 +1,8 @@
 package com.pnu.ailifelogv2.controller;
 
+import com.pnu.ailifelogv2.dto.LLM.ReqUserPrompt;
+import com.pnu.ailifelogv2.dto.LLM.ResAskDto;
+import com.pnu.ailifelogv2.dto.LLM.ResGenDto;
 import com.pnu.ailifelogv2.dto.LifeLog.LifeLogOutput;
 import com.pnu.ailifelogv2.entity.User;
 import com.pnu.ailifelogv2.service.LLMService;
@@ -8,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,12 +24,14 @@ public class LLMController {
     private final LLMService llmService;
 
     @PostMapping("/ask")
-    public ResponseEntity<String> summarize(String userInput, @AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(llmService.askToLLM(userInput, user), HttpStatus.OK);
+    public ResponseEntity<ResAskDto> summarize(@RequestBody ReqUserPrompt prompt, @AuthenticationPrincipal User user) {
+        String summary = llmService.askToLLM(prompt.getPrompt(), user);
+        return new ResponseEntity<>(new ResAskDto(summary), HttpStatus.OK);
     }
 
     @PostMapping("/generate")
-    public ResponseEntity<List<LifeLogOutput>> generate(String userInput, @AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(llmService.generateFromLLM(userInput, user), HttpStatus.OK);
+    public ResponseEntity<ResGenDto> generate(@RequestBody ReqUserPrompt prompt, @AuthenticationPrincipal User user) {
+        List<LifeLogOutput> lifeLogOutputs = llmService.generateFromLLM(prompt.getPrompt(), user);
+        return new ResponseEntity<>(new ResGenDto(lifeLogOutputs), HttpStatus.OK);
     }
 }
