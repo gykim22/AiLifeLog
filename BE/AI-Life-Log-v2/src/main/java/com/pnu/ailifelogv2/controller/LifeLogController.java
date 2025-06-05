@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -79,9 +80,23 @@ public class LifeLogController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "타임스탬프, 제목, 설명은 필수 항목입니다.");
         }
         return new ResponseEntity<>(
-            new ResLifeLogDto(lifeLogService.createLifeLog(lifeLogDto, user)),
+            lifeLogService.createLifeLog(lifeLogDto, user),
             HttpStatus.CREATED
         );
+    }
+
+    @PostMapping
+    public ResponseEntity<List<ResLifeLogDto>> createLifeLogs (
+            @RequestBody List<ReqCreateLifeLogDto> lifeLogDtos,
+            @AuthenticationPrincipal User user) {
+        validateUserExists(user);
+        for (ReqCreateLifeLogDto lifeLogDto : lifeLogDtos) {
+            if (lifeLogDto.getTimestamp() == null || lifeLogDto.getTitle() == null || lifeLogDto.getDescription() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "타임스탬프, 제목, 설명은 필수 항목입니다.");
+            }
+        }
+        List<ResLifeLogDto> createdLifeLogs = lifeLogService.createLifeLogs(lifeLogDtos, user);
+        return new ResponseEntity<>(createdLifeLogs, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

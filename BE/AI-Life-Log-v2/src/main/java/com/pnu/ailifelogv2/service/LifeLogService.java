@@ -19,6 +19,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -57,16 +59,14 @@ public class LifeLogService {
         return new ResLifeLogDto(lifelog);
     }
 
-    public LifeLog createLifeLog(ReqCreateLifeLogDto reqLifeLogDto, User user) {
-
-        LocalDateTime timestamp = parseTimestamp(reqLifeLogDto.getTimestamp());
+    public ResLifeLogDto createLifeLog(ReqCreateLifeLogDto reqLifeLogDto, User user) {
         LifeLog lifeLog = LifeLog.builder()
                 .title(reqLifeLogDto.getTitle())
                 .description(reqLifeLogDto.getDescription())
                 .timestamp(parseTimestamp(reqLifeLogDto.getTimestamp()))
                 .user(user)
                 .build();
-        return lifeLogRepository.save(lifeLog);
+        return new ResLifeLogDto(lifeLogRepository.save(lifeLog));
     }
 
     public LifeLog updateLifeLog(Long id, ReqUpdateLifeLogDto reqLifeLogDto, User user) {
@@ -89,5 +89,14 @@ public class LifeLogService {
                         HttpStatus.NOT_FOUND, "해당 ID의 LifeLog가 존재하지 않습니다."
                 ));
         lifeLogRepository.delete(lifeLog);
+    }
+
+    @Transactional
+    public List<ResLifeLogDto> createLifeLogs(List<ReqCreateLifeLogDto> lifeLogDtos, User user) {
+        List<ResLifeLogDto> resLifeLogDtoList = new ArrayList<>();
+        for (ReqCreateLifeLogDto lifeLogDto : lifeLogDtos) {
+            resLifeLogDtoList.add(createLifeLog(lifeLogDto, user));
+        }
+        return resLifeLogDtoList;
     }
 }
