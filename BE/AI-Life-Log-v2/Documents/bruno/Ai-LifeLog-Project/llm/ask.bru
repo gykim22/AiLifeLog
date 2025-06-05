@@ -2,7 +2,6 @@ meta {
   name: ask llm
   type: http
   seq: 1
-  description: LLM에게 질문하거나 요약을 요청합니다.
 }
 
 post {
@@ -17,6 +16,6 @@ auth:bearer {
 
 body:json {
   {
-    "userInput": "2024년 6월 1일부터 6월 7일까지의 라이프로그를 요약해줘."
+    "prompt": "2024년 6월 1일부터 6월 7일까지의 라이프로그를 요약해줘."
   }
-} 
+}

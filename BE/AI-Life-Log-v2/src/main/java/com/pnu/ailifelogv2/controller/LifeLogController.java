@@ -3,14 +3,13 @@ package com.pnu.ailifelogv2.controller;
 import com.pnu.ailifelogv2.dto.LifeLog.ReqCreateLifeLogDto;
 import com.pnu.ailifelogv2.dto.LifeLog.ReqUpdateLifeLogDto;
 import com.pnu.ailifelogv2.dto.LifeLog.ResLifeLogDto;
-import com.pnu.ailifelogv2.entity.User;
 import com.pnu.ailifelogv2.service.LifeLogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -31,14 +30,6 @@ public class LifeLogController {
         }
     }
 
-    private void validateUserExists(User user) {
-        if (user == null) {
-            throw new ResponseStatusException(
-                HttpStatus.UNAUTHORIZED, "사용자가 인증되지 않았습니다."
-            );
-        }
-    }
-
     @GetMapping
     public ResponseEntity<Page<ResLifeLogDto>> getAllLifeLogs (
             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -47,55 +38,45 @@ public class LifeLogController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(value = "to", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
-            @AuthenticationPrincipal User user) {
-
+            Authentication authentication) {
         validatePageAndSize(page, size);
-        validateUserExists(user);
 
         if (from != null && to != null) {
             return  ResponseEntity.ok(
-                lifeLogService.getLifeLogsByUserAndDateRange(user, from, to, page, size)
+                lifeLogService.getLifeLogsByUserAndDateRange(authentication, from, to, page, size)
             );
         }
         return ResponseEntity.ok(
-            lifeLogService.getLifeLogsByUser(user, page, size)
+            lifeLogService.getLifeLogsByUser(authentication, page, size)
         );
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResLifeLogDto> getLifeLogById (
             @PathVariable Long id,
-            @AuthenticationPrincipal User user) {
-        validateUserExists(user);
-        ResLifeLogDto lifeLog = lifeLogService.getLifeLogById(id, user);
+            Authentication authentication) {
+        ResLifeLogDto lifeLog = lifeLogService.getLifeLogById(id, authentication);
         return ResponseEntity.ok(lifeLog);
     }
 
     @PostMapping
     public ResponseEntity<ResLifeLogDto> createLifeLog (
             @RequestBody ReqCreateLifeLogDto lifeLogDto,
-            @AuthenticationPrincipal User user) {
-        validateUserExists(user);
+            Authentication authentication) {
         if (lifeLogDto.getTimestamp() == null || lifeLogDto.getTitle() == null || lifeLogDto.getDescription() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "타임스탬프, 제목, 설명은 필수 항목입니다.");
         }
         return new ResponseEntity<>(
-            lifeLogService.createLifeLog(lifeLogDto, user),
+            lifeLogService.createLifeLog(lifeLogDto, authentication),
             HttpStatus.CREATED
         );
     }
 
-    @PostMapping
+    @PostMapping("/batch")
     public ResponseEntity<List<ResLifeLogDto>> createLifeLogs (
             @RequestBody List<ReqCreateLifeLogDto> lifeLogDtos,
-            @AuthenticationPrincipal User user) {
-        validateUserExists(user);
-        for (ReqCreateLifeLogDto lifeLogDto : lifeLogDtos) {
-            if (lifeLogDto.getTimestamp() == null || lifeLogDto.getTitle() == null || lifeLogDto.getDescription() == null) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "타임스탬프, 제목, 설명은 필수 항목입니다.");
-            }
-        }
-        List<ResLifeLogDto> createdLifeLogs = lifeLogService.createLifeLogs(lifeLogDtos, user);
+            Authentication authentication) {
+        List<ResLifeLogDto> createdLifeLogs = lifeLogService.createLifeLogs(lifeLogDtos, authentication);
         return new ResponseEntity<>(createdLifeLogs, HttpStatus.CREATED);
     }
 
@@ -103,13 +84,12 @@ public class LifeLogController {
     public ResponseEntity<ResLifeLogDto> updateLifeLog (
             @PathVariable Long id,
             @RequestBody ReqUpdateLifeLogDto lifeLogDto,
-            @AuthenticationPrincipal User user) {
-        validateUserExists(user);
+            Authentication authentication) {
         if (lifeLogDto.getTimestamp() == null && lifeLogDto.getTitle() == null && lifeLogDto.getDescription() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "최소 하나의 필드(타임스탬프, 제목, 설명)는 업데이트해야 합니다.");
         }
         return new ResponseEntity<>(
-            new ResLifeLogDto(lifeLogService.updateLifeLog(id, lifeLogDto, user)),
+            new ResLifeLogDto(lifeLogService.updateLifeLog(id, lifeLogDto, authentication)),
             HttpStatus.OK
         );
     }
@@ -117,9 +97,8 @@ public class LifeLogController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLifeLog (
             @PathVariable Long id,
-            @AuthenticationPrincipal User user) {
-        validateUserExists(user);
-        lifeLogService.deleteLifeLog(id, user);
+            Authentication authentication) {
+        lifeLogService.deleteLifeLog(id, authentication);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
