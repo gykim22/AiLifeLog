@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -63,8 +64,11 @@ public class LifeLogController {
     public ResponseEntity<ResLifeLogDto> createLifeLog (
             @RequestBody ReqCreateLifeLogDto lifeLogDto,
             Authentication authentication) {
-        if (lifeLogDto.getTimestamp() == null || lifeLogDto.getTitle() == null || lifeLogDto.getDescription() == null) {
+        if (lifeLogDto.getTitle() == null || lifeLogDto.getDescription() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "타임스탬프, 제목, 설명은 필수 항목입니다.");
+        }
+        if (lifeLogDto.getTimestamp() == null || lifeLogDto.getTimestamp().isEmpty()) {
+            lifeLogDto.setTimestamp(LocalDateTime.now().toString());
         }
         return new ResponseEntity<>(
             lifeLogService.createLifeLog(lifeLogDto, authentication),
