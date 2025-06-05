@@ -7,6 +7,7 @@ import com.pnu.ailifelogv2.repository.UserRepository;
 import com.pnu.ailifelogv2.util.PromptTemplates;
 import com.pnu.ailifelogv2.util.SummaryTools;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LLMService {
@@ -54,10 +56,16 @@ public class LLMService {
 
     public List<LifeLogOutput> generateFromLLM(String userInput, Authentication authentication) {
         User user = getUserFromAuthentication(authentication);
-        return chatClient.prompt()
+        ChatResponse res =  chatClient.prompt()
                 .system(PromptTemplates.GEN_SYSTEM_PROMPT)
                 .user(u -> u.text(PromptTemplates.GEN_USER_PROMPT)
-                        .param("diaryText", userInput)).call()
-                .entity(outputConverter);
+                        .params(Map.of("diaryText", userInput, "format", outputConverter.getFormat()))
+                ).call().chatResponse();
+        try {
+            String content = res.getResult().getOutput().getText();
+            return outputConverter.convert(content);
+        } catch (NullPointerException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LLM 응답이 비어있습니다. 입력을 확인해주세요.");
+        }
     }
 }
