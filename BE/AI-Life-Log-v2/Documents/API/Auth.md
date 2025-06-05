@@ -30,10 +30,12 @@
 
 **로그인/회원가입 요청**
 
-```json
+#### 헤더
 POST /api/v2/auth/login
 Content-Type: application/json
 
+#### body
+```json
 {
   "username": "testuser",
   "password": "testpass"
