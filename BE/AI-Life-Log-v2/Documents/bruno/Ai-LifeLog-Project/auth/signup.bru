@@ -1,18 +1,18 @@
 meta {
   name: signup
   type: http
-  seq: 1
+  seq: 2
+  description: 새로운 사용자를 등록합니다.
 }
 
 post {
   url: {{baseurl}}/api/v2/auth/signup
   body: json
-  auth: inherit
 }
 
 body:json {
   {
-    "username": "testuser",
-    "password": "testpassword"
+    "username": "newuser",
+    "password": "newpass"
   }
 }

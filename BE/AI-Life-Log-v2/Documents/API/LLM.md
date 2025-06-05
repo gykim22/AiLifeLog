@@ -12,7 +12,7 @@
 - **URL**: `/api/v2/llms/ask`
 - **Method**: `POST`
 - **Content-Type**: `application/json`
-- **인증**: 필수 (Spring Security의 `@AuthenticationPrincipal`)
+- **인증**: 필수 (JWT 토큰)
 
 #### 파라미터
 
@@ -47,7 +47,7 @@
 - **URL**: `/api/v2/llms/generate`
 - **Method**: `POST`
 - **Content-Type**: `application/json`
-- **인증**: 필수
+- **인증**: 필수 (JWT 토큰)
 
 #### 파라미터
 
@@ -93,10 +93,11 @@
 
 ## 3. 공통 사항
 
-- 모든 요청은 인증(로그인)이 필요합니다.
+- 모든 요청은 JWT 토큰 인증이 필요합니다.
 - 응답 코드가 200이 아닌 경우, 일반적으로 401(인증 실패), 400(파라미터 오류), 500(서버 오류) 등이 반환될 수 있습니다.
 - `prompt`는 한글, 영어 등 자연어로 자유롭게 입력 가능합니다.
 - `/ask`는 LLM의 자유 답변(요약/질의 등)을, `/generate`는 구조화된 LifeLog 리스트(JSON)를 반환합니다.
+- 모든 요청은 JSON 형식으로 전송됩니다.
 
 ---
 

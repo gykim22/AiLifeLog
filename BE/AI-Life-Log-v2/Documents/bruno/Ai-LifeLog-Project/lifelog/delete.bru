@@ -1,21 +1,15 @@
 meta {
-  name: update lifelog
+  name: delete lifelog
   type: http
-  seq: 9
+  seq: 10
 }
 
-put {
+delete {
   url: {{baseurl}}/api/v2/logs/1
-  body: json
+  body: none
   auth: bearer
 }
 
 auth:bearer {
   token: {{jwt_token}}
-}
-
-body:json {
-  {
-    "description": "수정된 설명"
-  }
 }

@@ -30,11 +30,6 @@
 
 **로그인/회원가입 요청**
 
-#### 헤더
-POST /api/v2/auth/login
-Content-Type: application/json
-
-#### body
 ```json
 {
   "username": "testuser",
@@ -74,5 +69,6 @@ Content-Type: application/json
 - **로그인**과 **회원가입** 모두 동일한 입력값, 제약조건, 반환값 구조를 가집니다.
 - 입력값이 조건을 충족하지 않으면 400, 로그인 실패 시 401 반환
 - 성공 시 JWT 토큰 반환
+- 모든 요청은 JSON 형식으로 전송됩니다.
 
 ---

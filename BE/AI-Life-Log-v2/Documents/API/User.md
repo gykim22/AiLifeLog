@@ -52,8 +52,13 @@ Authorization: Bearer {token}
 **요청**
 
 ```
-DELETE /api/v2/users/self?password=testpass
+DELETE /api/v2/users/self
 Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "password": "testpass"
+}
 ```
 
 **응답**
@@ -80,6 +85,7 @@ Authorization: Bearer {token}
 - 내 정보 조회: 사용자 정보(id, username) 반환
 - 내 계정 삭제: 비밀번호 일치 시 계정 삭제, Body 없음
 - 인증 실패 또는 비밀번호 불일치 시 401 Unauthorized 반환
+- 모든 요청은 JSON 형식으로 전송됩니다.
 
 ---
 

@@ -1,18 +1,18 @@
 meta {
   name: login
   type: http
-  seq: 2
+  seq: 1
+  description: 사용자 로그인을 수행합니다.
 }
 
 post {
   url: {{baseurl}}/api/v2/auth/login
   body: json
-  auth: inherit
 }
 
 body:json {
   {
     "username": "testuser",
-    "password": "testpassword"
+    "password": "testpass"
   }
 }
