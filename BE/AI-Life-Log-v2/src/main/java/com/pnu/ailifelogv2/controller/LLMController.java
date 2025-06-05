@@ -5,7 +5,6 @@ import com.pnu.ailifelogv2.dto.LLM.ReqGenDto;
 import com.pnu.ailifelogv2.dto.LLM.ResAskDto;
 import com.pnu.ailifelogv2.dto.LLM.ResGenDto;
 import com.pnu.ailifelogv2.dto.LifeLog.LifeLogOutput;
-import com.pnu.ailifelogv2.entity.LifeLog;
 import com.pnu.ailifelogv2.service.LLMService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -59,13 +59,6 @@ public class LLMService {
         lifeLogRepository.saveAll(results);
     }
 
-    private List<LifeLogOutput> filterLifeLogs(List<LifeLogOutput> lifeLogOutputs) {
-        return lifeLogOutputs.stream()
-                .filter(Objects::nonNull)
-                .filter(lifeLog -> lifeLog.getTitle() != null && !lifeLog.getTitle().isEmpty())
-                .filter(lifeLog -> lifeLog.getDescription() != null && !lifeLog.getDescription().isEmpty())
-                .collect(Collectors.toList());
-    }
 
     @Autowired
     public LLMService(OpenAiChatModel chatModel,
