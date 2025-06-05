@@ -41,7 +41,7 @@
 
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuZXd1c2VyIiwiYXV0aCI6IlJPTEVfVVNFUiIsImlhdCI6MTc0OTEwODIzMiwiZXhwIjoxNzQ5NzEzMDMyfQ.wt21iFFeBuXROxjJ6at2D8ROCYhuQPzJH_vyd9AON_SaODCs_eeLPjZ4Csfg28UoBUHQeT7fONgFej_LnSfDdg"
 }
 ```
 

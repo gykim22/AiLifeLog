@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ReqUserPrompt {
+public class ReqAskDto {
     String prompt;
 }

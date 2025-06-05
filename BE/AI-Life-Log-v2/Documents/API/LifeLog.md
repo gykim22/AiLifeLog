@@ -34,6 +34,12 @@
 {
   "content": [
     {
+      "id": 33,
+      "title": "프로그래밍 언어론 강의 수강",
+      "description": "대학 4학년 강의를 수강하였다.",
+      "timestamp": "2025-06-05T15:06:18.138826"
+    },
+    {
       "id": 32,
       "title": "저녁 영화",
       "description": "가족과 영화를 봤다.",
@@ -56,12 +62,6 @@
       "title": "오전 개발",
       "description": "테스트 코드를 작성했다.",
       "timestamp": "2024-06-07T09:00"
-    },
-    {
-      "id": 28,
-      "title": "아침 명상",
-      "description": "30분 명상을 했다.",
-      "timestamp": "2024-06-07T07:00"
     }
   ],
   "pageable": {
@@ -69,27 +69,27 @@
     "pageSize": 5,
     "sort": {
       "empty": false,
-      "sorted": true,
-      "unsorted": false
-     },
-    "offset": 0,
-    "paged": true,
-    "unpaged": false
+      "unsorted": false,
+      "sorted": true
     },
+    "offset": 0,
+    "unpaged": false,
+    "paged": true
+  },
   "last": false,
+  "totalElements": 33,
   "totalPages": 7,
-  "totalElements": 32,
   "size": 5,
   "number": 0,
   "sort": {
     "empty": false,
-    "sorted": true,
-    "unsorted": false
+    "unsorted": false,
+    "sorted": true
   },
   "first": true,
   "numberOfElements": 5,
   "empty": false
-  }
+}
 ```
 ---
 
@@ -103,12 +103,12 @@
 
 - **응답 예시:**
     ```json
-    {
-      "id": 1,
-      "title": "제목",
-      "description": "설명",
-      "timestamp": "2024-06-07T15:30:45.123"
-    }
+  {
+  "id": 1,
+  "title": "아침 조깅",
+  "description": "오늘 아침에 5km 조깅을 했다. 날씨가 좋았다.",
+  "timestamp": "2024-06-01T07:30"
+  }
     ```
 
 ---
@@ -119,6 +119,8 @@
     - `title` (문자열)
     - `description` (문자열)
     - `timestamp` (문자열, `yyyy-MM-dd'T'HH:mm:ss[.SSS]`)
+      - 예시 : `2024-06-07T15:30:45.123`
+      - 생략 가능 (생략 시 현재 시간으로 설정)
 
 - **요청 예시:**
     ```json
@@ -145,6 +147,7 @@
 
 - **Body:**
     - LifeLogDto 배열
+    - timestamp 필수
 
 - **요청 예시:**
     ```json

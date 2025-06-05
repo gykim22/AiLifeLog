@@ -2,17 +2,17 @@ meta {
   name: login
   type: http
   seq: 1
-  description: 사용자 로그인을 수행합니다.
 }
 
 post {
   url: {{baseurl}}/api/v2/auth/login
   body: json
+  auth: none
 }
 
 body:json {
   {
-    "username": "testuser",
-    "password": "testpass"
+    "username": "newuser",
+    "password": "newpass"
   }
 }

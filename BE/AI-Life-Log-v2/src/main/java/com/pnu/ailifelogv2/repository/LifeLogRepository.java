@@ -16,4 +16,5 @@ public interface LifeLogRepository extends JpaRepository<LifeLog, Long> {
     Page<LifeLog> findByUser(User user, Pageable pageable);
     Optional<LifeLog> findByIdAndUser(Long id, User user);
     Page<LifeLog> findByTimestampBetweenAndUser(LocalDateTime start, LocalDateTime end, User user, Pageable pageable);
+    Optional<LifeLog> findFirstByTimestampBetweenAndUserOrderByTimestampDesc(LocalDateTime start, LocalDateTime end, User user);
 }

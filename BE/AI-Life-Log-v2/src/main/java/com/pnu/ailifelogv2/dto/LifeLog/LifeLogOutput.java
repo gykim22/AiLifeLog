@@ -1,6 +1,7 @@
 package com.pnu.ailifelogv2.dto.LifeLog;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.pnu.ailifelogv2.entity.LifeLog;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

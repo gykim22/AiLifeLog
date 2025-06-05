@@ -23,13 +23,15 @@ public class PromptTemplates {
 
     public static final String GEN_USER_PROMPT = """
             아래는 사용자의 일기입니다.
-            
+            작성일자 : {date}
+            최근 작성 시간 : {timestamp}
             ---
             {diaryText}
             ---
             
             이 일기를 분석하여, title, description, timestamp 세 필드를 갖는 LifeLog 객체 리스트(JSON 배열)로 변환해 주세요.
-            각 기록은 일기에서 의미 있는 사건, 활동, 감정 등으로 구분하여 분리해 주세요. timestamp는 최대한 추론하여 채우되, 여의치 않으면 분단위로 시간적 순서에 맞게 작성해주세요.
+            각 기록은 일기에서 의미 있는 사건, 활동, 감정 등으로 구분하여 분리해 주세요. timestamp는 최대한 추론하여 채우되 최근 작성된 로그가 있다면 최근 작성 시간 이후로 배정하고, 시간적 순서에 맞게 작성해주세요.
+            만약 23:59:59에 작성된 기록이 있다면, 23:59:59로 작성해 주세요.
             반드시 {format}에 제시된 JSON 구조를 따르세요.
             """;
 
