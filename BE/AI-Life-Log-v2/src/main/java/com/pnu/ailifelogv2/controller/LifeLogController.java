@@ -74,8 +74,11 @@ public class LifeLogController {
 
     @PostMapping("/batch")
     public ResponseEntity<List<ResLifeLogDto>> createLifeLogs (
-            @RequestBody List<ReqCreateLifeLogDto> lifeLogDtos,
+            @RequestBody ReqCreateLifeLogDto[] lifeLogDtos,
             Authentication authentication) {
+        if (lifeLogDtos == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "LifeLog DTO 리스트에 null 값이 포함되어 있습니다.");
+        }
         List<ResLifeLogDto> createdLifeLogs = lifeLogService.createLifeLogs(lifeLogDtos, authentication);
         return new ResponseEntity<>(createdLifeLogs, HttpStatus.CREATED);
     }

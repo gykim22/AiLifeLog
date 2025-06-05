@@ -158,8 +158,7 @@ public class LifeLogService {
      * @return 생성된 LifeLog DTO 리스트
      */
     @Transactional
-    public List<ResLifeLogDto> createLifeLogs(List<ReqCreateLifeLogDto> lifeLogDtos, Authentication authentication) {
-        List<ResLifeLogDto> resLifeLogDtoList = new ArrayList<>();
+    public List<ResLifeLogDto> createLifeLogs(ReqCreateLifeLogDto[] lifeLogDtos, Authentication authentication) {
         User user = getUserFromAuthentication(authentication);
         List<LifeLog> lifeLogs = new ArrayList<>();
         int count = 0;
