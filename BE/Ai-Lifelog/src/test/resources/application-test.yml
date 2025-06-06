@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: Ai-Lifelog-Test
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: 
+
+  h2:
+    console:
+      enabled: true
+
+jwt:
+  secret: mySecretKeyForJWTTokenGenerationThatIsLongEnoughForHMACSHA256Algorithm
+  expiration: 7200
+
+logging:
+  level:
+    root: WARN
+    com.pnu.ailifelog: DEBUG 

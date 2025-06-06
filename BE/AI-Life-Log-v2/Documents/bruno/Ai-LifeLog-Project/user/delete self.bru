@@ -1,0 +1,22 @@
+meta {
+  name: delete self
+  type: http
+  seq: 2
+  description: 사용자 계정을 삭제합니다. JWT 토큰 인증과 비밀번호 확인이 필요합니다.
+}
+
+delete {
+  url: {{baseurl}}/api/v2/users/self
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
+
+body:json {
+  {
+    "password": "testpassword"
+  }
+}

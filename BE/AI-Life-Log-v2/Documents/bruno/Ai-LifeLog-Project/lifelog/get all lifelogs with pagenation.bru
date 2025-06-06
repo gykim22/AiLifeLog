@@ -1,0 +1,15 @@
+meta {
+  name: get all lifelogs with pagenation
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseurl}}/api/v2/logs?page=0&size=10&from=2024-06-01&to=2024-06-07
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}

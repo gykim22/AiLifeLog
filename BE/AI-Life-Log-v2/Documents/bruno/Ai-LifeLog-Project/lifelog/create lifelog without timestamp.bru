@@ -1,0 +1,22 @@
+meta {
+  name: create lifelog without timestamp
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseurl}}/api/v2/logs
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
+
+body:json {
+  {
+    "title": "프로그래밍 언어론 강의 수강",
+    "description": "대학 4학년 강의를 수강하였다."
+  }
+}

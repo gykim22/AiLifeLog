@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.pnu.termproject"
-    compileSdk = 34
+    namespace = "com.pnu.ailifelog"
+    compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.pnu.termproject"
+        applicationId = "com.pnu.ailifelog"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

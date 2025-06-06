@@ -1,0 +1,21 @@
+meta {
+  name: generate lifelog
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseurl}}/api/v2/llms/generate
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
+
+body:json {
+  {
+    "prompt": "오늘 친구들과 취업에 대한 대화를 나누고 저녁에 과제를 했다!"
+  }
+}
