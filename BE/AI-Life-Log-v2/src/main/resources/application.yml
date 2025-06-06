@@ -29,5 +29,7 @@ jwt:
   expiration: 604800 
 
 server:
+  port: ${SERVER_PORT:8080}
+
   error:
     include-stacktrace: never

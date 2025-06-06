@@ -73,3 +73,11 @@ tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
 }
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'com.pnu.ailifelogv2.AiLifeLogV2Application'
+        )
+    }
+}
