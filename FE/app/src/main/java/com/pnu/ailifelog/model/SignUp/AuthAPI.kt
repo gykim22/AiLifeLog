@@ -6,24 +6,32 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import javax.inject.Named
 import javax.inject.Singleton
 
+
 interface ServerAuthAPI {
-    @POST("api/auth/signup")
+    @POST("api/v2/auth/signup")
     suspend fun signUp(@Body request: SignUpRequest): Response<SignUpResponse>
+
+    @POST("/api/v2/auth/login")
+    suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    val client = OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        })
+        .build()
 
     @Provides
     @Singleton
@@ -35,7 +43,8 @@ object NetworkModule {
             .create()
 
         return Retrofit.Builder()
-            .baseUrl("http://164.125.253.20:0000/")
+            .baseUrl("http://swallow104.gonetis.com:8081/")
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
