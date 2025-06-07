@@ -26,4 +26,13 @@ services:
     depends_on:
       - db
 
-
+  mcp-connector:
+    build: ./fastmcp
+    environment:
+      APPLICATION_URL: http://lifelog:8080
+      HOST: 0.0.0.0
+      PORT: 8000
+    ports:
+      - "8082:8000"
+    depends_on:
+      - lifelog

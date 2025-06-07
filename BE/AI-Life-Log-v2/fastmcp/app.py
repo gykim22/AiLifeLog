@@ -232,4 +232,4 @@ if __name__ == "__main__":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     
     # STDIO 트랜스포트로 서버 실행
-    mcp.run(transport="streamable-http", host="127.0.0.1", port=8000)
+    mcp.run(transport="sse", host="127.0.0.1", port=8000)

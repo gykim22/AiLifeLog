@@ -14,14 +14,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # 애플리케이션 코드 복사
 COPY . .
-
-# 환경 변수 설정
-ENV APPLICATION_URL=http://localhost:8080
-ENV CURSOR_ENABLED=true
-ENV CURSOR_URL=http://localhost:8000
-ENV HOST=0.0.0.0
-ENV PORT=8000
-
 # 포트 노출
 EXPOSE 8000
 
