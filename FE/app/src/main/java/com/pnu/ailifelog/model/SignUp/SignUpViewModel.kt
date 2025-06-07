@@ -27,7 +27,7 @@ class SignUpViewModel @Inject constructor(
     /*값 업데이트*/
 
     fun updateloginId(id: String) {
-        _signUpData.value = _signUpData.value.copy(loginId = id)
+        _signUpData.value = _signUpData.value.copy(username = id)
     }
 
     fun updatePassword(password: String) {
@@ -36,7 +36,7 @@ class SignUpViewModel @Inject constructor(
 
     /*값 읽기*/
     // 사용자 ID
-    fun getloginId(): String = _signUpData.value.loginId
+    fun getloginId(): String = _signUpData.value.username
 
     // 비밀번호
     fun getPassword(): String = _signUpData.value.password
@@ -44,7 +44,7 @@ class SignUpViewModel @Inject constructor(
     fun logSignUpData(tag: String = "SignUpData") {
         val data = _signUpData.value
         Log.d(tag, """
-        - userId: ${data.loginId}
+        - userId: ${data.username}
         - password: ${data.password}
     """.trimIndent())
     }
@@ -62,6 +62,30 @@ class SignUpViewModel @Inject constructor(
                     onSuccess(response.token)
                 } else {
                     onFailure(Exception("회원가입 실패: 서버 응답 없음"))
+                }
+            } catch (e: Exception) {
+                onFailure(e)
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun login(
+        username: String,
+        password: String,
+        onSuccess: (token: String) -> Unit,
+        onFailure: (Throwable?) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = authRepository.login(username, password)
+                if (response != null) {
+                    _accessToken.value = response.token
+                    onSuccess(response.token)
+                } else {
+                    onFailure(Exception("로그인 실패: 서버 응답 없음"))
                 }
             } catch (e: Exception) {
                 onFailure(e)

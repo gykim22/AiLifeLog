@@ -3,24 +3,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.pnu.ailifelog.model.SignUp.TokenManager
+import com.pnu.ailifelog.nav.NavGraph
 import com.pnu.ailifelog.ui.theme.AilifelogTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val token = TokenManager.getAccessToken(this)
+        val startPage = if (token.isNullOrEmpty()) "IdPage" else "MainPage"
         enableEdgeToEdge()
         setContent {
             AilifelogTheme {
-
+                NavGraph(startPage = startPage)
             }
         }
     }
 }
+
 
