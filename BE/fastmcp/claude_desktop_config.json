@@ -1,0 +1,10 @@
+{
+    "mcpServers": {
+      "LifeLogServer": {
+        "url": "http://127.0.0.1:8000/sse",
+        "env": {
+          "APPLICATION_URL": "http://localhost:8080"
+        }
+      }
+    }
+}

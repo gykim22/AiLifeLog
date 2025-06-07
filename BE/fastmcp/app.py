@@ -10,7 +10,7 @@ from httpclient import Client
 default_env = {
     "APPLICATION_URL": "http://localhost:8080",
     "CURSOR_ENABLED": "true",
-    "CURSOR_URL": "http://localhost:8000",
+    "CURSOR_URL": "http://0.0.0.0:8000",
     "HOST": "0.0.0.0",
     "PORT": "8000"
 }
@@ -232,4 +232,4 @@ if __name__ == "__main__":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     
     # STDIO 트랜스포트로 서버 실행
-    mcp.run(transport="streamable-http", host="127.0.0.1", port=8000)
+    mcp.run(transport="sse", host="127.0.0.1", port=8000)

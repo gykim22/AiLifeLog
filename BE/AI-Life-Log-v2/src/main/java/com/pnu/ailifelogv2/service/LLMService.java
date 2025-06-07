@@ -73,7 +73,6 @@ public class LLMService {
     }
 
 
-
     public String askToLLM(String userInput, Authentication authentication) {
         User user = getUserFromAuthentication(authentication);
         return chatClient.prompt()
