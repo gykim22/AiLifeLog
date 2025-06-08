@@ -3,9 +3,7 @@ package com.pnu.ailifelog.view
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,8 +12,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -38,11 +34,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,7 +54,6 @@ import com.pnu.ailifelog.composable.WhiteScreenModifier
 import com.pnu.ailifelog.composable.buttonModifier
 import com.pnu.ailifelog.model.SignUp.SignUpViewModel
 import com.pnu.ailifelog.model.SignUp.TokenManager
-import com.pnu.ailifelog.ui.theme.gray100
 import com.pnu.ailifelog.ui.theme.gray500
 import com.pnu.ailifelog.ui.theme.gray800
 import com.pnu.ailifelog.ui.theme.pretendard
@@ -74,8 +67,6 @@ fun LoginPage(
     var id by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
-    val isLoading by authViewModel.isLoading
-
 
     Column(
         modifier = WhiteScreenModifier

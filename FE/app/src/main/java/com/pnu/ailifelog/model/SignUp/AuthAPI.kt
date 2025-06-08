@@ -20,7 +20,7 @@ interface ServerAuthAPI {
     @POST("api/v2/auth/signup")
     suspend fun signUp(@Body request: SignUpRequest): Response<SignUpResponse>
 
-    @POST("/api/v2/auth/login")
+    @POST("api/v2/auth/login")
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 }
 
@@ -43,7 +43,7 @@ object NetworkModule {
             .create()
 
         return Retrofit.Builder()
-            .baseUrl("http://swallow104.gonetis.com:8081/")
+            .baseUrl("http://3.39.9.95:8080/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
