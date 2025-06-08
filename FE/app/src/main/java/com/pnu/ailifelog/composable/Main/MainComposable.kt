@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -252,12 +253,13 @@ fun LogCard(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color(0xFFF7F8FA), shape = RoundedCornerShape(12.dp))
-            .padding(16.dp)
+            .padding(start = 16.dp, bottom = 8.dp)
     ) {
         Column {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = item.title,
@@ -270,7 +272,8 @@ fun LogCard(
                     IconButton(onClick = { menuExpanded = true }) {
                         Icon(
                             imageVector = Icons.Default.MoreVert,
-                            contentDescription = "더보기"
+                            contentDescription = "더보기",
+                            modifier = Modifier.size(18.dp)
                         )
                     }
 
@@ -289,17 +292,13 @@ fun LogCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(6.dp))
-
             Text(
                 text = item.description,
                 fontSize = 14.sp,
                 fontFamily = pretendard,
                 color = Color.Black
             )
-
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = formatTimestamp(item.timestamp),
                 fontSize = 12.sp,

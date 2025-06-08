@@ -73,17 +73,17 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    @Named("SearchRetrofit")
+    @Named("LifeLogRetrofit")
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://swallow104.gonetis.com:8081/")
+            .baseUrl("http://3.39.9.95:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
     }
 
     @Provides
-    fun provideCreateRecordApi(@Named("SearchRetrofit") retrofit: Retrofit): CreateRecordApi {
+    fun provideCreateRecordApi(@Named("LifeLogRetrofit") retrofit: Retrofit): CreateRecordApi {
         return retrofit.create(CreateRecordApi::class.java)
     }
 

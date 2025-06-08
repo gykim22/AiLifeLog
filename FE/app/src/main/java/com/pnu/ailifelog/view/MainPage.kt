@@ -322,9 +322,6 @@ fun MyPage(
             .fillMaxSize()
             .padding(horizontal = 24.dp)
     ) {
-        Box() {
-
-        }
         HeightSpacer(30.dp)
         Text(
             text = "마이페이지",
