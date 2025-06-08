@@ -3,7 +3,26 @@
 
 ## 프론트 엔드  안드로이드 앱 실행 방법
 
-[작성 필요]
+### 1. 개발 환경
+- **Android Studio Ladybug 2024.2.1 Patch 3**
+- Kotlin 2.0.20 이상
+- Gradle 8.x
+- Android SDK 34 이상
+- Java 11
+- Windows 11
+
+### 2. 실행 방법
+1. 본 레포지토리의 FE 디렉토리를 Android Studio로 프로젝트 오픈.
+2. `build.gradle.kts` 및 `settings.gradle.kts` sync.
+3. 실제 기기(Android 모바일 디바이스) 유선 연결 또는 IDE 내 탑재된 Android 에뮬레이터 설정
+4. `app` 모듈을 선택하고 **Run** 실행 (Shift + F10)
+5. 아이디/비밀번호로 회원 가입 후 라이프로그 작성
+6. 앱을 종료 및 재실행 시 토큰이 유효하다면 자동 로그인, 아닐 시 로그인 페이지로 이동
+
+### 3. 주요 기능
+- 회원가입 / 로그인 (JWT 기반)
+- 라이프로그 생성 / 삭제 / 조회
+- GPT 기반 분석 / 생성 기능 호출
 
 ## Backend 배포 환경 구성 및 실행 방법
 
