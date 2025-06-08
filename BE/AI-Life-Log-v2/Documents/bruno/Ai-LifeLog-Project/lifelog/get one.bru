@@ -1,0 +1,15 @@
+meta {
+  name: get one lifelog
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseurl}}/api/v2/logs/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}

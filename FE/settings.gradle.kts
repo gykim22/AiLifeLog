@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TermProject"
+rootProject.name = "ailifelog"
 include(":app")
  

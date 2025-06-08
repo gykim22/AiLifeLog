@@ -1,0 +1,21 @@
+meta {
+  name: ask llm
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseurl}}/api/v2/llms/ask
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
+
+body:json {
+  {
+    "prompt": "오늘 한게 뭐야"
+  }
+}

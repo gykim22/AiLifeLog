@@ -1,0 +1,14 @@
+{
+    "name": "Life Log Interface Server",
+    "version": "1.0.0",
+    "cursor": {
+        "enabled": true,
+        "url": "http://localhost:8000",
+        "auth": {
+            "type": "none"
+        }
+    },
+    "api": {
+        "url": "http://localhost:8080"
+    }
+} 

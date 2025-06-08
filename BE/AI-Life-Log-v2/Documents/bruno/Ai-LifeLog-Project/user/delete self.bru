@@ -1,0 +1,21 @@
+meta {
+  name: delete self
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseurl}}/api/v2/users/self
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{jwt_token}}
+}
+
+body:json {
+  {
+    "password": "newpass"
+  }
+}
