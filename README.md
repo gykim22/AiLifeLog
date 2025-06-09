@@ -129,7 +129,7 @@ AI Life Log는 사용자의 일상 활동을 기록하고 분석하는 지능형
 
 ### 시스템 아키텍처 다이어그램
 
-![시스템 아키텍처 다이어그램](./images/system_diagram.png)
+![시스템 아키텍처 다이어그램](./documents/images/system_diagram.png)
 
 
 ### 백엔드
