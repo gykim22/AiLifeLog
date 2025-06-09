@@ -179,10 +179,10 @@ AI Life Log는 사용자의 일상 활동을 기록하고 분석하는 지능형
 
 ### API 명세서
 
-- [인증 API 명세서](../../BE/AI-Life-Log-v2/Documents/API/Auth.md)
-- [라이프로그 API 명세서](../../BE/AI-Life-Log-v2/Documents/API/LifeLog.md)
-- [LLM API 명세서](../../BE/AI-Life-Log-v2/Documents/API/LLM.md)
-- [사용자 API 명세서](../../BE/AI-Life-Log-v2/Documents/API/User.md)
+- [인증 API 명세서](https://github.com/gykim22/AiLifeLog/tree/main/BE/AI-Life-Log-v2/Documents/API/Auth.md)
+- [라이프로그 API 명세서](https://github.com/gykim22/AiLifeLog/tree/main/BE/AI-Life-Log-v2/Documents/API/LifeLog.md)
+- [LLM API 명세서](https://github.com/gykim22/AiLifeLog/tree/main/BE/AI-Life-Log-v2/Documents/API/LLM.md)
+- [사용자 API 명세서](https://github.com/gykim22/AiLifeLog/tree/main/BE/AI-Life-Log-v2/Documents/API/User.md)
 
 
 ### 기능 흐름 Sequence Diagram
